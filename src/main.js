@@ -2,6 +2,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { scenes } from './content.js';
 import { FrameSequence } from './sequence.js';
+import { initFluid } from './fluid.js';
+import { initCursor } from './cursor.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,11 +48,12 @@ function buildScene(scene, index) {
   const textEls = scene.texts.map((t) => {
     const div = document.createElement('div');
     div.className = 'scene-text';
-    div.innerHTML = `
+    div.innerHTML = `<div class="scene-text-inner">
       ${t.eyebrow ? `<div class="eyebrow">${t.eyebrow}</div>` : ''}
       ${t.heading ? `<h2>${t.heading}</h2>` : ''}
       ${t.body ? `<p class="body">${t.body}</p>` : ''}
-      ${t.cta ? `<a class="cta" href="${t.cta.href}">${t.cta.label}</a>` : ''}`;
+      ${t.cta ? `<a class="cta" href="${t.cta.href}">${t.cta.label}</a>` : ''}
+    </div>`;
     viewport.appendChild(div);
     return div;
   });
@@ -129,6 +132,40 @@ function buildFooter() {
 
 const built = scenes.map((scene, i) => animateScene(scene, buildScene(scene, i), i));
 buildFooter();
+
+// --- cursor-reactive layer (fluid trail, custom cursor, text parallax) ---
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reducedMotion) {
+  const fluidCanvas = document.createElement('canvas');
+  fluidCanvas.id = 'fluid-canvas';
+  document.body.appendChild(fluidCanvas);
+  if (!initFluid(fluidCanvas)) fluidCanvas.remove(); // no WebGL2 → no effect
+
+  initCursor();
+
+  // Text blocks drift subtly toward the pointer (desktop only).
+  if (window.matchMedia('(pointer: fine)').matches) {
+    const target = { x: 0, y: 0 };
+    let px = 0;
+    let py = 0;
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        target.x = (e.clientX / innerWidth) * 2 - 1;
+        target.y = (e.clientY / innerHeight) * 2 - 1;
+      },
+      { passive: true }
+    );
+    const inners = document.querySelectorAll('.scene-text-inner');
+    gsap.ticker.add(() => {
+      px += (target.x - px) * 0.05;
+      py += (target.y - py) * 0.05;
+      const t = `translate(${px * 22}px, ${py * 14}px)`;
+      inners.forEach((el) => (el.style.transform = t));
+    });
+  }
+}
 
 // Loader: waits for first frame of scene 1 (or instantly on fallback).
 let fakeProgress = 0;

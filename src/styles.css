@@ -182,6 +182,43 @@ body {
 }
 .scene-text h2 .word > span { display: inline-block; }
 
+/* ---------- cursor-reactive layer ---------- */
+#fluid-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 45;
+  pointer-events: none;
+  mix-blend-mode: screen; /* black = transparent */
+}
+.has-custom-cursor,
+.has-custom-cursor a,
+.has-custom-cursor button {
+  cursor: none;
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  border-radius: 50%;
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+}
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+.scene-text-inner { will-change: transform; }
+
 /* ---------- scroll hint ---------- */
 .scroll-hint {
   position: fixed;
