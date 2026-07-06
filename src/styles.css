@@ -1,0 +1,237 @@
+/* ============================================================
+   AEM Baltic — scroll preview
+   BRAND TOKENS: swap these when brand assets arrive.
+   ============================================================ */
+:root {
+  --brand-bg: #07080c;
+  --brand-text: #f4f5f7;
+  --brand-muted: rgba(244, 245, 247, 0.66);
+  --brand-accent: #4f7cff;   /* placeholder — replace with AEM Baltic brand color */
+  --brand-accent-2: #9a5cff; /* placeholder secondary accent */
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--brand-bg);
+  color: var(--brand-text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- loader ---------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--brand-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+.loader.done { opacity: 0; visibility: hidden; }
+.loader-mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  letter-spacing: 0.02em;
+}
+.loader-mark span { color: var(--brand-accent); font-weight: 300; margin-left: 0.15em; }
+.loader-bar {
+  width: min(240px, 50vw);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.loader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--brand-accent);
+  transition: width 0.3s ease;
+}
+
+/* ---------- header ---------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem clamp(1.2rem, 4vw, 3rem);
+  mix-blend-mode: difference;
+}
+.logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-decoration: none;
+}
+.logo span { font-weight: 300; margin-left: 0.15em; }
+.header-cta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  transition: background 0.25s, color 0.25s;
+}
+.header-cta:hover { background: #fff; color: #000; }
+
+/* ---------- scenes ---------- */
+.scene {
+  position: relative;
+  /* Tall section = scroll runway for the scrub. Adjust per taste. */
+  height: 320vh;
+}
+.scene-viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.scene-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.scene-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.45), transparent 22%, transparent 70%, rgba(0,0,0,0.55)),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.35));
+}
+
+/* ---------- text overlays ---------- */
+.scene-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 clamp(1.4rem, 7vw, 8rem);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+.scene-text .eyebrow {
+  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--brand-accent);
+  margin-bottom: 1.1rem;
+}
+.scene-text h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+.scene-text .body {
+  margin-top: 1.4rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--brand-muted);
+  max-width: 46ch;
+}
+.scene-text .cta {
+  pointer-events: auto;
+  display: inline-block;
+  margin-top: 2.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brand-bg);
+  background: var(--brand-text);
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.95rem 2.1rem;
+  transition: transform 0.25s ease, background 0.25s;
+}
+.scene-text .cta:hover { transform: translateY(-2px); background: var(--brand-accent); color: #fff; }
+
+/* split-word animation targets */
+.scene-text h2 .word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+.scene-text h2 .word > span { display: inline-block; }
+
+/* ---------- scroll hint ---------- */
+.scroll-hint {
+  position: fixed;
+  bottom: 1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+  transition: opacity 0.4s;
+}
+.scroll-hint-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(to bottom, var(--brand-muted), transparent);
+  animation: hint-drop 1.6s ease-in-out infinite;
+}
+@keyframes hint-drop {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  position: relative;
+  z-index: 10;
+  padding: 3rem clamp(1.2rem, 4vw, 3rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--brand-muted);
+}
+.site-footer a { color: var(--brand-text); text-decoration: none; }
+
+/* ---------- mobile ---------- */
+@media (max-width: 768px) {
+  .scene { height: 260vh; }
+  .scene-text { justify-content: flex-end; padding-bottom: 18svh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-line { animation: none; }
+}
