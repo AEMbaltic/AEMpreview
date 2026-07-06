@@ -3,11 +3,13 @@
    BRAND TOKENS: swap these when brand assets arrive.
    ============================================================ */
 :root {
-  --brand-bg: #07080c;
-  --brand-text: #f4f5f7;
-  --brand-muted: rgba(244, 245, 247, 0.66);
-  --brand-accent: #4f7cff;   /* placeholder — replace with AEM Baltic brand color */
-  --brand-accent-2: #9a5cff; /* placeholder secondary accent */
+  /* Palette derived from the AEM Baltic logo: brush-script brick red. */
+  --brand-bg: #0c0807;          /* near-black with a warm tint */
+  --brand-text: #f7f4f2;
+  --brand-muted: rgba(247, 244, 242, 0.66);
+  --brand-red: #8a3324;         /* logo brick red */
+  --brand-accent: #d96844;      /* brightened terracotta — readable on dark */
+  --brand-accent-2: #b34528;    /* deeper rust secondary */
   --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
@@ -44,7 +46,7 @@ body {
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   letter-spacing: 0.02em;
 }
-.loader-mark span { color: var(--brand-accent); font-weight: 300; margin-left: 0.15em; }
+.loader-mark span { color: var(--brand-accent); font-weight: 300; margin-left: 0.25em; }
 .loader-bar {
   width: min(240px, 50vw);
   height: 2px;
@@ -70,7 +72,6 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem clamp(1.2rem, 4vw, 3rem);
-  mix-blend-mode: difference;
 }
 .logo {
   font-family: var(--font-display);
@@ -80,7 +81,7 @@ body {
   color: #fff;
   text-decoration: none;
 }
-.logo span { font-weight: 300; margin-left: 0.15em; }
+.logo span { font-weight: 300; margin-left: 0.25em; color: var(--brand-accent); }
 .header-cta {
   font-size: 0.85rem;
   font-weight: 600;

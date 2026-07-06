@@ -7,11 +7,12 @@ import { initCursor } from './cursor.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Warm ember tones pulled from the logo's brick red, one pair per scene.
 const ACCENTS = [
-  ['rgba(79,124,255,0.5)', 'rgba(154,92,255,0.4)'],
-  ['rgba(154,92,255,0.45)', 'rgba(79,124,255,0.35)'],
-  ['rgba(64,200,255,0.4)', 'rgba(154,92,255,0.4)'],
-  ['rgba(79,124,255,0.45)', 'rgba(64,200,255,0.35)'],
+  ['rgba(217,104,68,0.45)', 'rgba(138,51,36,0.5)'],
+  ['rgba(179,69,40,0.5)', 'rgba(230,140,80,0.3)'],
+  ['rgba(150,40,28,0.5)', 'rgba(217,104,68,0.35)'],
+  ['rgba(230,120,70,0.4)', 'rgba(120,32,22,0.55)'],
 ];
 
 const app = document.getElementById('app');

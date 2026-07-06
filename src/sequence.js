@@ -121,7 +121,7 @@ export class FrameSequence {
     const w = canvas.width;
     const h = canvas.height;
     const [c1, c2] = this.accentColors;
-    ctx.fillStyle = '#07080c';
+    ctx.fillStyle = '#0c0807';
     ctx.fillRect(0, 0, w, h);
 
     const t = progress * Math.PI * 2;

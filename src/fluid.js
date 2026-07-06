@@ -249,9 +249,9 @@ export function initFluid(canvas) {
     pressure = createDoubleFBO(sim.w, sim.h);
   });
 
-  // Brand-tinted dye: hue drifts through the blue→violet range over time.
+  // Brand-tinted dye: hue drifts through the brand's ember red→orange range.
   function dyeColor(t) {
-    const hue = 0.62 + 0.1 * Math.sin(t * 0.0004);
+    const hue = 0.045 + 0.035 * Math.sin(t * 0.0004);
     const i = Math.floor(hue * 6);
     const f = hue * 6 - i;
     const v = 1, s = 0.85;
