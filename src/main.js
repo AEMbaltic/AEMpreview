@@ -127,7 +127,7 @@ function buildFooter() {
   footer.className = 'site-footer';
   footer.innerHTML = `
     <div>© ${new Date().getFullYear()} AEM Baltic</div>
-    <div><a href="mailto:hello@aembaltic.com">hello@aembaltic.com</a></div>`;
+    <div><a href="mailto:aksels@aembaltic.com">aksels@aembaltic.com</a></div>`;
   app.appendChild(footer);
 }
 

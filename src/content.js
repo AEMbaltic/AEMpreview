@@ -68,7 +68,7 @@ export const scenes = [
         eyebrow: 'Ready when you are',
         heading: 'Your brand could live here.',
         body: 'Let’s build something people can’t scroll past.',
-        cta: { label: 'Start a project', href: 'mailto:hello@aembaltic.com' },
+        cta: { label: 'Start a project', href: 'mailto:aksels@aembaltic.com' },
       },
     ],
   },
