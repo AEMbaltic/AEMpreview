@@ -6,7 +6,7 @@
   /* Palette derived from the AEM Baltic logo: brush-script brick red. */
   --brand-bg: #0c0807;          /* near-black with a warm tint */
   --brand-text: #f7f4f2;
-  --brand-muted: rgba(247, 244, 242, 0.66);
+  --brand-muted: rgba(247, 244, 242, 0.8);
   --brand-red: #8a3324;         /* logo brick red */
   --brand-accent: #d96844;      /* brightened terracotta — readable on dark */
   --brand-accent-2: #b34528;    /* deeper rust secondary */
