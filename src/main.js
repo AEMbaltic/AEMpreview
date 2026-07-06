@@ -39,11 +39,7 @@ function buildScene(scene, index) {
   const section = document.createElement('section');
   section.className = 'scene';
   section.id = scene.isContact ? 'contact' : `s${index}`;
-  section.innerHTML = `
-    <div class="scene-viewport">
-      <canvas class="scene-canvas"></canvas>
-      <div class="scene-vignette"></div>
-    </div>`;
+  section.innerHTML = `<div class="scene-viewport"></div>`;
   const viewport = section.querySelector('.scene-viewport');
 
   const textEls = scene.texts.map((t) => {
@@ -61,18 +57,28 @@ function buildScene(scene, index) {
   });
 
   app.appendChild(section);
-  return { section, canvas: section.querySelector('.scene-canvas'), textEls };
+  return { section, textEls };
 }
 
-function animateScene(scene, { section, canvas, textEls }, index) {
-  const seq = new FrameSequence(canvas, scene.id, ACCENTS[index % ACCENTS.length]);
+const stage = document.getElementById('stage');
+
+function animateScene(scene, { section, textEls }, index) {
+  const seq = new FrameSequence(stage, scene.id, ACCENTS[index % ACCENTS.length]);
+  seq.active = index === 0;
   seq.init();
 
+  // Video scrub runs to 'bottom top' — the exact scroll position where the
+  // next scene's trigger starts. The clips share matching end/start frames,
+  // so the shared canvas hands off seamlessly.
   ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: 'bottom bottom',
+    end: 'bottom top',
     scrub: true,
+    onToggle: (self) => {
+      seq.active = self.isActive;
+      if (self.isActive) seq.render(seq.progress);
+    },
     onUpdate: (self) => seq.render(self.progress),
   });
 

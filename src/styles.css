@@ -97,7 +97,27 @@ body {
 }
 .header-cta:hover { background: #fff; color: #000; }
 
-/* ---------- scenes ---------- */
+/* ---------- shared stage ---------- */
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+.stage-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.45), transparent 22%, transparent 70%, rgba(0,0,0,0.55)),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.35));
+}
+
+/* ---------- scenes (transparent runways over the stage) ---------- */
+#app { position: relative; z-index: 2; }
 .scene {
   position: relative;
   /* Tall section = scroll runway for the scrub. Adjust per taste. */
@@ -109,21 +129,6 @@ body {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-}
-.scene-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.scene-vignette {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,0.45), transparent 22%, transparent 70%, rgba(0,0,0,0.55)),
-    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.35));
 }
 
 /* ---------- text overlays ---------- */
@@ -283,7 +288,7 @@ body {
   .scene { height: 260vh; }
   .scene-text { justify-content: flex-end; padding-bottom: 16svh; }
   /* text sits at the bottom on mobile — deepen the scrim behind it */
-  .scene-vignette {
+  .stage-vignette {
     background:
       linear-gradient(to bottom, rgba(0,0,0,0.45), transparent 20%, transparent 45%, rgba(0,0,0,0.78)),
       radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.3));

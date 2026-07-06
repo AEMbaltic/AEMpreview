@@ -20,6 +20,9 @@ export class FrameSequence {
     this.fallback = true;
     this.progress = 0;
     this.onLoadProgress = null;
+    // Sequences share one canvas; only the scene owning the current
+    // scroll range may draw (managed by main.js via ScrollTrigger).
+    this.active = false;
 
     this.resize = this.resize.bind(this);
     window.addEventListener('resize', this.resize);
@@ -97,6 +100,7 @@ export class FrameSequence {
 
   render(progress) {
     this.progress = progress;
+    if (!this.active) return;
     const { ctx, canvas } = this;
     if (this.fallback) {
       this.renderFallback(progress);
