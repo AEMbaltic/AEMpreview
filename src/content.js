@@ -69,6 +69,7 @@ export const scenes = [
         heading: 'Your brand could live here.',
         body: 'Let’s build something people can’t scroll past.',
         cta: { label: 'Start a project', href: 'mailto:aksels@aembaltic.com' },
+        note: 'or write to aksels@aembaltic.com',
       },
     ],
   },

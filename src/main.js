@@ -54,6 +54,7 @@ function buildScene(scene, index) {
       ${t.heading ? `<h2>${t.heading}</h2>` : ''}
       ${t.body ? `<p class="body">${t.body}</p>` : ''}
       ${t.cta ? `<a class="cta" href="${t.cta.href}">${t.cta.label}</a>` : ''}
+      ${t.note ? `<div class="cta-note">${t.note}</div>` : ''}
     </div>`;
     viewport.appendChild(div);
     return div;
@@ -187,6 +188,16 @@ window.addEventListener(
   },
   { passive: true }
 );
+
+// Header CTA: fly to the point in the contact scene where the text is
+// on screen (the scene top shows only the bare video, which reads as a
+// dead link).
+document.querySelector('.header-cta').addEventListener('click', (e) => {
+  e.preventDefault();
+  const contact = document.getElementById('contact');
+  const target = contact.offsetTop + (contact.offsetHeight - innerHeight) * 0.6;
+  window.scrollTo({ top: target, behavior: 'smooth' });
+});
 
 // Keep ScrollTrigger measurements fresh after orientation changes.
 window.addEventListener('orientationchange', () => setTimeout(() => ScrollTrigger.refresh(), 300));
