@@ -155,6 +155,7 @@ body {
   letter-spacing: -0.02em;
   max-width: 14ch;
   text-wrap: balance;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55);
 }
 .scene-text .body {
   margin-top: 1.4rem;
@@ -162,7 +163,9 @@ body {
   line-height: 1.55;
   color: var(--brand-muted);
   max-width: 46ch;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.6);
 }
+.scene-text .eyebrow { text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7); }
 .scene-text .cta {
   pointer-events: auto;
   display: inline-block;
@@ -270,7 +273,13 @@ body {
 /* ---------- mobile ---------- */
 @media (max-width: 768px) {
   .scene { height: 260vh; }
-  .scene-text { justify-content: flex-end; padding-bottom: 18svh; }
+  .scene-text { justify-content: flex-end; padding-bottom: 16svh; }
+  /* text sits at the bottom on mobile — deepen the scrim behind it */
+  .scene-vignette {
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.45), transparent 20%, transparent 45%, rgba(0,0,0,0.78)),
+      radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.3));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
