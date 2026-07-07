@@ -239,6 +239,107 @@ body {
 }
 .scene-text-inner { will-change: transform; }
 
+/* ---------- contact modal ---------- */
+.contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.contact-modal.open { opacity: 1; }
+.contact-modal[hidden] { display: none; }
+.contact-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 4, 3, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.contact-card {
+  position: relative;
+  z-index: 1;
+  width: min(460px, 100%);
+  max-height: 90svh;
+  overflow-y: auto;
+  background: #171009;
+  border: 1px solid rgba(217, 104, 68, 0.28);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.contact-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.contact-sub {
+  margin: 0.5rem 0 1.4rem;
+  font-size: 0.95rem;
+  color: var(--brand-muted);
+}
+.contact-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 1.1rem;
+  background: none;
+  border: none;
+  color: var(--brand-muted);
+  font-size: 1.7rem;
+  line-height: 1;
+  padding: 0.2rem;
+}
+.contact-close:hover { color: var(--brand-text); }
+.contact-card label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+}
+.contact-card input,
+.contact-card textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--brand-text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.contact-card input:focus,
+.contact-card textarea:focus { border-color: var(--brand-accent); }
+.contact-card .hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
+.contact-submit {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brand-bg);
+  background: var(--brand-text);
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 2rem;
+  transition: background 0.25s, transform 0.25s;
+}
+.contact-submit:hover { background: var(--brand-accent); color: #fff; transform: translateY(-1px); }
+.contact-submit:disabled { opacity: 0.6; }
+.contact-status { margin-top: 0.9rem; min-height: 1.3em; font-size: 0.92rem; color: var(--brand-muted); }
+
 /* ---------- scroll hint ---------- */
 .scroll-hint {
   position: fixed;

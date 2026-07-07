@@ -26,6 +26,29 @@
 
     <main id="app"><!-- scenes are built by src/main.js from src/content.js --></main>
 
+    <div class="contact-modal" id="contact-modal" hidden>
+      <div class="contact-backdrop" data-close></div>
+      <div class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+        <button class="contact-close" type="button" data-close aria-label="Close">&times;</button>
+        <h3 id="contact-title">Start a project</h3>
+        <p class="contact-sub">Tell us a little about it — we’ll get back to you within a day.</p>
+        <form id="contact-form" novalidate>
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <label>Your name
+            <input type="text" name="name" required autocomplete="name" placeholder="Jane Doe" />
+          </label>
+          <label>Email
+            <input type="email" name="email" required autocomplete="email" placeholder="jane@company.com" />
+          </label>
+          <label>What are we building?
+            <textarea name="message" rows="4" required placeholder="A landing page like this one…"></textarea>
+          </label>
+          <button class="contact-submit" type="submit">Send inquiry</button>
+          <div class="contact-status" role="status"></div>
+        </form>
+      </div>
+    </div>
+
     <div class="scroll-hint" id="scroll-hint">
       <span>Scroll</span>
       <div class="scroll-hint-line"></div>

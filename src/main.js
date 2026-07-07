@@ -4,6 +4,7 @@ import { scenes } from './content.js';
 import { FrameSequence } from './sequence.js';
 import { initFluid } from './fluid.js';
 import { initCursor } from './cursor.js';
+import { initContactForm } from './form.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,21 +68,6 @@ function animateScene(scene, { section, textEls }, index) {
   seq.active = index === 0;
   seq.init();
 
-  // Video scrub runs to 'bottom top' — the exact scroll position where the
-  // next scene's trigger starts. The clips share matching end/start frames,
-  // so the shared canvas hands off seamlessly.
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top top',
-    end: 'bottom top',
-    scrub: true,
-    onToggle: (self) => {
-      seq.active = self.isActive;
-      if (self.isActive) seq.render(seq.progress);
-    },
-    onUpdate: (self) => seq.render(self.progress),
-  });
-
   // One shared timeline per scene, padded to duration 1 so tween positions
   // map 1:1 to scene scroll progress. Each block rises in at `at` and
   // drifts out at `out` (or holds to the end if `out` is omitted).
@@ -141,6 +127,35 @@ function buildFooter() {
 const built = scenes.map((scene, i) => animateScene(scene, buildScene(scene, i), i));
 buildFooter();
 
+// --- stage renderer -------------------------------------------------------
+// The shared canvas is driven by one deterministic resolver instead of
+// per-scene trigger events: any scroll position maps to exactly one scene
+// and a frame progress, so instant jumps (anchor links, scrollbar drags,
+// fast flicks) can never leave a stale scene on screen. Scenes scrub over
+// their full height — the next scene takes over precisely where the
+// previous ends, and the clips' matching end/start frames make the handoff
+// seamless. The last scene finishes within its pinned range so the finale
+// is reachable before the page runs out of scroll.
+const sections = [...document.querySelectorAll('.scene')];
+
+function renderStage() {
+  const y = window.scrollY;
+  let idx = 0;
+  for (let i = 0; i < sections.length; i++) {
+    if (y >= sections[i].offsetTop) idx = i;
+  }
+  const s = sections[idx];
+  const isLast = idx === sections.length - 1;
+  const runway = isLast ? s.offsetHeight - window.innerHeight : s.offsetHeight;
+  const progress = Math.min(1, Math.max(0, (y - s.offsetTop) / runway));
+  built.forEach((seq, i) => (seq.active = i === idx));
+  built[idx].render(progress);
+}
+
+window.addEventListener('scroll', renderStage, { passive: true });
+window.addEventListener('resize', renderStage);
+renderStage();
+
 // --- cursor-reactive layer (fluid trail, custom cursor, text parallax) ---
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -195,15 +210,8 @@ window.addEventListener(
   { passive: true }
 );
 
-// Header CTA: fly to the point in the contact scene where the text is
-// on screen (the scene top shows only the bare video, which reads as a
-// dead link).
-document.querySelector('.header-cta').addEventListener('click', (e) => {
-  e.preventDefault();
-  const contact = document.getElementById('contact');
-  const target = contact.offsetTop + (contact.offsetHeight - innerHeight) * 0.6;
-  window.scrollTo({ top: target, behavior: 'smooth' });
-});
+// Both "Start a project" buttons open the contact form modal.
+initContactForm();
 
 // Keep ScrollTrigger measurements fresh after orientation changes.
 window.addEventListener('orientationchange', () => setTimeout(() => ScrollTrigger.refresh(), 300));
