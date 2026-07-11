@@ -73,6 +73,7 @@ function buildScene(scene, index) {
               <div class="flip-hint">+</div>
             </div>
             <div class="card-face card-back">
+              <div class="card-emoji">${c.emoji ?? ''}</div>
               <div class="num">${c.num}</div>
               <p>${c.body}</p>
             </div>
