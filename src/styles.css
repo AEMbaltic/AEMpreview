@@ -212,42 +212,87 @@ body {
   top: 50%;
   left: 0;
   display: flex;
-  gap: clamp(1rem, 2.5vw, 2rem);
+  gap: clamp(1.2rem, 3vw, 2.4rem);
   padding-left: clamp(1.4rem, 7vw, 8rem);
   will-change: transform;
-  pointer-events: none;
 }
 .hscroll-card {
   flex-shrink: 0;
-  width: clamp(230px, 26vw, 340px);
-  background: rgba(12, 8, 7, 0.5);
+  width: clamp(300px, 32vw, 430px);
+  height: clamp(320px, 48vh, 440px);
+  perspective: 1400px;
+}
+.hscroll-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.2, 0.85, 0.3, 1.1);
+}
+@media (hover: hover) {
+  .hscroll-card:hover .hscroll-card-inner { transform: rotateY(180deg); }
+}
+.hscroll-card.flipped .hscroll-card-inner { transform: rotateY(180deg); }
+.card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 22px;
+  padding: 2rem 1.9rem;
+  overflow: hidden;
+}
+.card-front {
+  background: rgba(12, 8, 7, 0.52);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 18px;
-  padding: 1.7rem 1.6rem;
+}
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(140deg, #b34528 0%, #8a3324 60%, #6d2417 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .hscroll-card .num {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.25em;
   color: var(--brand-accent-light);
   margin-bottom: 0.9rem;
 }
+.card-back .num { color: rgba(255, 255, 255, 0.75); }
 .hscroll-card h4 {
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
   font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.01em;
-  margin-bottom: 0.6rem;
 }
-.hscroll-card p {
-  font-size: 0.95rem;
+.card-back p {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
   line-height: 1.5;
-  color: var(--brand-muted);
+  color: #fff;
+}
+.flip-hint {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.6rem;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--brand-text);
 }
 @media (max-width: 768px) {
-  .hscroll-card { width: min(72vw, 300px); }
+  .hscroll-card { width: min(76vw, 330px); height: min(58vh, 400px); }
 }
 
 /* ---------- cursor-reactive layer ---------- */

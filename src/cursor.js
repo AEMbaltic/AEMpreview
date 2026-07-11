@@ -51,7 +51,7 @@ export function initCursor() {
   );
 
   document.addEventListener('pointerover', (e) => {
-    hovering = !!e.target.closest('a, button');
+    hovering = !!e.target.closest('a, button, .hscroll-card');
   });
   document.addEventListener('pointerout', () => {
     hovering = false;

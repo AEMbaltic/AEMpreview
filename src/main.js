@@ -64,13 +64,25 @@ function buildScene(scene, index) {
     track.innerHTML = scene.hscroll.items
       .map(
         (c) => `<div class="hscroll-card">
-          <div class="num">${c.num}</div>
-          <h4>${c.title}</h4>
-          <p>${c.body}</p>
+          <div class="hscroll-card-inner">
+            <div class="card-face card-front">
+              <div class="num">${c.num}</div>
+              <h4>${c.title}</h4>
+              <div class="flip-hint">+</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="num">${c.num}</div>
+              <p>${c.body}</p>
+            </div>
+          </div>
         </div>`
       )
       .join('');
     viewport.appendChild(track);
+    // touch devices have no hover — tap toggles the flip
+    track.querySelectorAll('.hscroll-card').forEach((card) =>
+      card.addEventListener('click', () => card.classList.toggle('flipped'))
+    );
   }
 
   app.appendChild(section);
