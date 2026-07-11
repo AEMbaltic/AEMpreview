@@ -161,7 +161,8 @@ body {
   letter-spacing: -0.02em;
   max-width: 14ch;
   text-wrap: balance;
-  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55);
+  /* no text-shadow here: the word-rise wrappers clip it into visible
+     rectangles around each word */
 }
 .scene-text .body {
   margin-top: 1.4rem;
