@@ -22,7 +22,7 @@ export const scenes = [
       {
         at: 0.68,
         out: 0.94,
-        heading: 'Keep scrolling. This is what we do.',
+        heading: 'Keep scrolling.',
       },
     ],
   },
