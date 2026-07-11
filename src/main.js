@@ -5,6 +5,7 @@ import { FrameSequence } from './sequence.js';
 import { initFluid } from './fluid.js';
 import { initCursor } from './cursor.js';
 import { initContactForm } from './form.js';
+import { cardArt } from './card-art.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -63,9 +64,10 @@ function buildScene(scene, index) {
     track.className = 'hscroll-track';
     track.innerHTML = scene.hscroll.items
       .map(
-        (c) => `<div class="hscroll-card">
+        (c, i) => `<div class="hscroll-card">
           <div class="hscroll-card-inner">
             <div class="card-face card-front">
+              <div class="card-art">${cardArt[i] ?? ''}</div>
               <div class="num">${c.num}</div>
               <h4>${c.title}</h4>
               <div class="flip-hint">+</div>

@@ -256,6 +256,19 @@ body {
   background: linear-gradient(140deg, #b34528 0%, #8a3324 60%, #6d2417 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+.card-art {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.8rem;
+}
+.card-art svg {
+  width: min(78%, 230px);
+  max-height: 100%;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
+}
 .hscroll-card .num {
   font-size: 0.85rem;
   font-weight: 700;
