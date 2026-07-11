@@ -10,6 +10,7 @@
   --brand-red: #8a3324;         /* logo brick red */
   --brand-accent: #d96844;      /* brightened terracotta — readable on dark */
   --brand-accent-2: #b34528;    /* deeper rust secondary */
+  --brand-accent-light: #ffb391; /* pale terracotta — small text over bright footage */
   --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
@@ -146,10 +147,10 @@ body {
 }
 .scene-text .eyebrow {
   font-size: clamp(0.72rem, 1.4vw, 0.9rem);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.28em;
-  color: var(--brand-accent);
+  color: var(--brand-accent-light);
   margin-bottom: 1.1rem;
 }
 .scene-text h2 {
@@ -170,7 +171,9 @@ body {
   max-width: 46ch;
   text-shadow: 0 1px 16px rgba(0, 0, 0, 0.6);
 }
-.scene-text .eyebrow { text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7); }
+.scene-text .eyebrow {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 2px 18px rgba(0, 0, 0, 0.65);
+}
 .scene-text .cta {
   pointer-events: auto;
   display: inline-block;
