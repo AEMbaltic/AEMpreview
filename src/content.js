@@ -30,18 +30,24 @@ export const scenes = [
     id: 'scene-2',
     texts: [
       {
-        at: 0.1,
-        out: 0.5,
+        at: 0.08,
+        out: 0.3,
         eyebrow: 'What we do',
         heading: 'Full-funnel. Full throttle.',
       },
-      {
-        at: 0.6,
-        out: 0.94,
-        heading: 'Strategy · Media · Creative',
-        body: 'Performance marketing, social & content, SEO & data, brand campaigns. From first scroll to final sale, we run the whole journey.',
-      },
     ],
+    // Horizontal card train: slides right-to-left across the viewport
+    // between these scene-progress points while the video keeps scrubbing.
+    hscroll: {
+      from: 0.34,
+      to: 0.97,
+      items: [
+        { num: '01', title: 'Performance marketing', body: 'Paid search & social that pays for itself.' },
+        { num: '02', title: 'Social & content', body: 'Feeds people actually follow.' },
+        { num: '03', title: 'SEO & data', body: 'Found first, measured always.' },
+        { num: '04', title: 'Brand campaigns', body: 'Stories that stick — from first scroll to final sale.' },
+      ],
+    },
   },
   {
     id: 'scene-3',

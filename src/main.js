@@ -57,13 +57,29 @@ function buildScene(scene, index) {
     return div;
   });
 
+  let track = null;
+  if (scene.hscroll) {
+    track = document.createElement('div');
+    track.className = 'hscroll-track';
+    track.innerHTML = scene.hscroll.items
+      .map(
+        (c) => `<div class="hscroll-card">
+          <div class="num">${c.num}</div>
+          <h4>${c.title}</h4>
+          <p>${c.body}</p>
+        </div>`
+      )
+      .join('');
+    viewport.appendChild(track);
+  }
+
   app.appendChild(section);
-  return { section, textEls };
+  return { section, textEls, track };
 }
 
 const stage = document.getElementById('stage');
 
-function animateScene(scene, { section, textEls }, index) {
+function animateScene(scene, { section, textEls, track }, index) {
   const seq = new FrameSequence(stage, scene.id, ACCENTS[index % ACCENTS.length]);
   seq.active = index === 0;
   seq.init();
@@ -77,9 +93,20 @@ function animateScene(scene, { section, textEls }, index) {
       start: 'top top',
       end: 'bottom bottom',
       scrub: 0.4,
+      invalidateOnRefresh: true,
     },
   });
   tl.set({}, {}, 1); // pad: timeline duration = 1 = full scene scroll
+
+  if (track) {
+    gsap.set(track, { yPercent: -50 });
+    tl.fromTo(
+      track,
+      { x: () => window.innerWidth },
+      { x: () => -track.scrollWidth, ease: 'none', duration: scene.hscroll.to - scene.hscroll.from },
+      scene.hscroll.from
+    );
+  }
 
   scene.texts.forEach((t, i) => {
     const el = textEls[i];
