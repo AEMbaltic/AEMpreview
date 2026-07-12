@@ -180,6 +180,47 @@ buildFooter();
 // is reachable before the page runs out of scroll.
 const sections = [...document.querySelectorAll('.scene')];
 
+// Dwell pacing: while a text block is fully on screen, the video scrubs at
+// a fraction of normal speed — a held "reading moment" — then catches up
+// between blocks. Piecewise-linear remap of scene progress; endpoints stay
+// 0→0 and 1→1 so seamless scene handoffs are unaffected.
+const DWELL_SPEED = 0.22;
+
+function buildDwellRemap(scene) {
+  const dwells = scene.texts
+    .map((t) => {
+      const start = Math.min(0.94, t.at + 0.09);
+      const end = Math.min(0.97, Math.max(start + 0.05, (t.out ?? 1) - 0.05));
+      return [start, end];
+    })
+    .sort((a, b) => a[0] - b[0]);
+
+  const points = [0, ...dwells.flat(), 1];
+  const segs = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const a = points[i];
+    const b = points[i + 1];
+    if (b <= a) continue;
+    const slow = dwells.some(([s, e]) => a >= s && b <= e);
+    segs.push({ a, b, w: (b - a) * (slow ? DWELL_SPEED : 1) });
+  }
+  const total = segs.reduce((sum, s) => sum + s.w, 0);
+  return (p) => {
+    let acc = 0;
+    for (const s of segs) {
+      if (p >= s.b) {
+        acc += s.w;
+      } else {
+        if (p > s.a) acc += ((p - s.a) / (s.b - s.a)) * s.w;
+        break;
+      }
+    }
+    return acc / total;
+  };
+}
+
+const remaps = scenes.map(buildDwellRemap);
+
 function renderStage() {
   const y = window.scrollY;
   let idx = 0;
@@ -191,7 +232,7 @@ function renderStage() {
   const runway = isLast ? s.offsetHeight - window.innerHeight : s.offsetHeight;
   const progress = Math.min(1, Math.max(0, (y - s.offsetTop) / runway));
   built.forEach((seq, i) => (seq.active = i === idx));
-  built[idx].render(progress);
+  built[idx].render(remaps[idx](progress));
 }
 
 window.addEventListener('scroll', renderStage, { passive: true });
