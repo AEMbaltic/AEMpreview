@@ -6,6 +6,7 @@ import { initFluid } from './fluid.js';
 import { initCursor } from './cursor.js';
 import { initContactForm } from './form.js';
 import { cardArt } from './card-art.js';
+import { initAudio } from './audio.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -186,14 +187,18 @@ const sections = [...document.querySelectorAll('.scene')];
 // 0→0 and 1→1 so seamless scene handoffs are unaffected.
 const DWELL_SPEED = 0.22;
 
-function buildDwellRemap(scene) {
-  const dwells = scene.texts
+function sceneDwells(scene) {
+  return scene.texts
     .map((t) => {
       const start = Math.min(0.94, t.at + 0.09);
       const end = Math.min(0.97, Math.max(start + 0.05, (t.out ?? 1) - 0.05));
       return [start, end];
     })
     .sort((a, b) => a[0] - b[0]);
+}
+
+function buildDwellRemap(scene) {
+  const dwells = sceneDwells(scene);
 
   const points = [0, ...dwells.flat(), 1];
   const segs = [];
@@ -220,6 +225,14 @@ function buildDwellRemap(scene) {
 }
 
 const remaps = scenes.map(buildDwellRemap);
+const dwellRanges = scenes.map(sceneDwells);
+
+// Scroll tick audio: a soft detent per scroll notch, a deeper tock when a
+// headline dwell locks in (like flicking a clock wheel).
+const audio = initAudio(document.getElementById('sound-toggle'));
+const TICK_STEP = 140; // px of scroll per tick
+let lastTickBucket = Math.floor(window.scrollY / TICK_STEP);
+let wasInDwell = false;
 
 function renderStage() {
   const y = window.scrollY;
@@ -233,6 +246,15 @@ function renderStage() {
   const progress = Math.min(1, Math.max(0, (y - s.offsetTop) / runway));
   built.forEach((seq, i) => (seq.active = i === idx));
   built[idx].render(remaps[idx](progress));
+
+  const bucket = Math.floor(y / TICK_STEP);
+  if (bucket !== lastTickBucket) {
+    lastTickBucket = bucket;
+    audio.tick();
+  }
+  const inDwell = dwellRanges[idx].some(([a, b]) => progress >= a && progress <= b);
+  if (inDwell && !wasInDwell) audio.tock();
+  wasInDwell = inDwell;
 }
 
 window.addEventListener('scroll', renderStage, { passive: true });

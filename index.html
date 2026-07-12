@@ -16,7 +16,17 @@
 
     <header class="site-header">
       <a class="logo" href="#top" aria-label="AEM Baltic"></a>
-      <a class="header-cta" href="#contact">Start a project</a>
+      <div class="header-actions">
+        <button id="sound-toggle" class="sound-toggle" type="button" aria-label="Toggle sound">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor" stroke="none"/>
+            <path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7"/>
+            <path class="wave" d="M18 6a8.5 8.5 0 0 1 0 12"/>
+            <line class="slash" x1="4" y1="4" x2="20" y2="20"/>
+          </svg>
+        </button>
+        <a class="header-cta" href="#contact">Start a project</a>
+      </div>
     </header>
 
     <!-- Single shared stage: every scene's frames draw here, so scene

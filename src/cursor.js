@@ -3,8 +3,8 @@
 
 import gsap from 'gsap';
 
-const MAGNET_RADIUS = 110;
-const MAGNET_PULL = 0.35;
+const MAGNET_RADIUS = 80;
+const MAGNET_PULL = 0.25;
 
 export function initCursor() {
   if (!window.matchMedia('(pointer: fine)').matches) return;
