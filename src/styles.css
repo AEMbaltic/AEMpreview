@@ -110,6 +110,16 @@ body {
 .sound-toggle.muted .wave { display: none; }
 .sound-toggle.muted .slash { display: block; }
 .sound-toggle:hover { background: #fff; color: #000; }
+/* pulses until the audio engine unlocks on the first click/tap */
+.sound-toggle.attention { animation: sound-pulse 2s ease-out infinite; }
+@keyframes sound-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(217, 104, 68, 0.55); }
+  70% { box-shadow: 0 0 0 12px rgba(217, 104, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 104, 68, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sound-toggle.attention { animation: none; }
+}
 .header-cta {
   font-size: 0.85rem;
   font-weight: 600;

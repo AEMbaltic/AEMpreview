@@ -20,11 +20,23 @@ export function initAudio(toggleBtn) {
       master.gain.value = 0.9;
       master.connect(ctx.destination);
     }
-    if (ctx.state === 'suspended') return ctx.resume().catch(() => {});
+    ctx.addEventListener('statechange', markLiveIfRunning);
+    if (ctx.state === 'suspended') {
+      return ctx.resume().then(markLiveIfRunning).catch(() => {});
+    }
+    markLiveIfRunning();
     return Promise.resolve();
   }
 
-  for (const ev of ['pointerdown', 'touchend', 'click', 'keydown', 'wheel']) {
+  // Audio can only unlock on a real user gesture (click/tap/key — wheel
+  // scrolling does NOT count, per browser policy). Listen to everything
+  // that qualifies, and pulse the toggle until the engine is live so
+  // desktop visitors know one click starts the sound.
+  function markLiveIfRunning() {
+    if (ctx && ctx.state === 'running') toggleBtn.classList.remove('attention');
+  }
+
+  for (const ev of ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'click', 'keydown', 'wheel']) {
     window.addEventListener(ev, ensureCtx, { passive: true });
   }
 
@@ -72,7 +84,7 @@ export function initAudio(toggleBtn) {
     const now = performance.now();
     if (now - lastTickAt < 40) return;
     lastTickAt = now;
-    click(0.12);
+    click(0.06);
   }
 
   // --- ambient scroll music -------------------------------------------
@@ -141,11 +153,15 @@ export function initAudio(toggleBtn) {
     enabled = !enabled;
     localStorage.setItem('aem-sound', enabled ? 'on' : 'off');
     // confirmation click so the visitor immediately hears that sound works
-    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.15));
-    else fadeMusic(0.0001, 0.15); // muting also silences the pad promptly
+    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.1));
+    else {
+      fadeMusic(0.0001, 0.15); // muting also silences the pad promptly
+      toggleBtn.classList.remove('attention');
+    }
     renderBtn();
   });
   renderBtn();
+  if (enabled) toggleBtn.classList.add('attention');
 
   return { tick, scrolling };
 }
