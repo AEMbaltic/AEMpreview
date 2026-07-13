@@ -228,7 +228,7 @@ const remaps = scenes.map(buildDwellRemap);
 
 // Scroll tick audio: a soft mechanical detent per scroll notch.
 const audio = initAudio(document.getElementById('sound-toggle'));
-const TICK_STEP = 140; // px of scroll per tick
+const TICK_STEP = 70; // px of scroll per tick
 let lastTickBucket = Math.floor(window.scrollY / TICK_STEP);
 
 function renderStage() {

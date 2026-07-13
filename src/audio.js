@@ -72,7 +72,7 @@ export function initAudio(toggleBtn) {
     const now = performance.now();
     if (now - lastTickAt < 40) return;
     lastTickAt = now;
-    click(0.4);
+    click(0.2);
   }
 
   function renderBtn() {
@@ -83,7 +83,7 @@ export function initAudio(toggleBtn) {
     enabled = !enabled;
     localStorage.setItem('aem-sound', enabled ? 'on' : 'off');
     // confirmation click so the visitor immediately hears that sound works
-    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.5));
+    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.25));
     renderBtn();
   });
   renderBtn();
