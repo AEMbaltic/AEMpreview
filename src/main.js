@@ -249,6 +249,7 @@ function renderStage() {
     lastTickBucket = bucket;
     audio.tick();
   }
+  audio.scrolling();
 }
 
 window.addEventListener('scroll', renderStage, { passive: true });

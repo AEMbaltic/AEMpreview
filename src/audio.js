@@ -72,7 +72,65 @@ export function initAudio(toggleBtn) {
     const now = performance.now();
     if (now - lastTickAt < 40) return;
     lastTickAt = now;
-    click(0.2);
+    click(0.12);
+  }
+
+  // --- ambient scroll music -------------------------------------------
+  // A warm detuned chord pad (Am9) through a slowly-breathing lowpass.
+  // Silent at rest; fades in while the page is scrolling, fades out when
+  // scrolling stops. Fully synthesized — no audio files.
+  const MUSIC_LEVEL = 0.35;
+  let music = null;
+  let musicTimer = null;
+
+  function startMusic() {
+    if (music || !ctx) return;
+    const out = ctx.createGain();
+    out.gain.value = 0;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 750;
+    lp.Q.value = 0.4;
+    lp.connect(out);
+    out.connect(master);
+    // A2, E3, C4, B3 — Am9 voicing, each doubled with gentle detune
+    for (const f of [110, 164.81, 261.63, 246.94]) {
+      for (const det of [-5, 4]) {
+        const osc = ctx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.value = f;
+        osc.detune.value = det;
+        const g = ctx.createGain();
+        g.gain.value = 0.02;
+        osc.connect(g);
+        g.connect(lp);
+        osc.start();
+      }
+    }
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 0.06;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 260;
+    lfo.connect(lfoGain);
+    lfoGain.connect(lp.frequency);
+    lfo.start();
+    music = { out };
+  }
+
+  function fadeMusic(target, timeConstant) {
+    if (!music || !ctx) return;
+    const t = ctx.currentTime;
+    music.out.gain.cancelScheduledValues(t);
+    music.out.gain.setTargetAtTime(target, t, timeConstant);
+  }
+
+  // called on every scroll frame: swell in, then decay after scrolling stops
+  function scrolling() {
+    if (!enabled || !ctx || ctx.state !== 'running') return;
+    startMusic();
+    fadeMusic(MUSIC_LEVEL, 0.3);
+    clearTimeout(musicTimer);
+    musicTimer = setTimeout(() => fadeMusic(0.0001, 0.6), 280);
   }
 
   function renderBtn() {
@@ -83,10 +141,11 @@ export function initAudio(toggleBtn) {
     enabled = !enabled;
     localStorage.setItem('aem-sound', enabled ? 'on' : 'off');
     // confirmation click so the visitor immediately hears that sound works
-    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.25));
+    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.15));
+    else fadeMusic(0.0001, 0.15); // muting also silences the pad promptly
     renderBtn();
   });
   renderBtn();
 
-  return { tick };
+  return { tick, scrolling };
 }
