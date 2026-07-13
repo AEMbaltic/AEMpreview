@@ -28,19 +28,43 @@ export function initAudio(toggleBtn) {
     window.addEventListener(ev, ensureCtx, { passive: true });
   }
 
-  function blip(freq, dur, vol, type) {
+  // Mechanical click: a band-passed noise snap plus a tiny low thump —
+  // sounds like a real ratchet detent rather than an electronic beep.
+  let noiseBuf = null;
+  function click(vol) {
     if (!enabled || !ctx || ctx.state !== 'running') return;
     const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
+    if (!noiseBuf) {
+      noiseBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.05), ctx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 3400;
+    bp.Q.value = 1.1;
     const g = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
     g.gain.setValueAtTime(vol, t);
-    g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
-    osc.connect(g);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.028);
+    src.connect(bp);
+    bp.connect(g);
     g.connect(master);
+    src.start(t);
+    src.stop(t + 0.04);
+
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(185, t);
+    osc.frequency.exponentialRampToValueAtTime(115, t + 0.03);
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(vol * 0.45, t);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
+    osc.connect(g2);
+    g2.connect(master);
     osc.start(t);
-    osc.stop(t + dur + 0.02);
+    osc.stop(t + 0.06);
   }
 
   // per-notch tick, rate-limited so fast flicks don't machine-gun
@@ -48,13 +72,7 @@ export function initAudio(toggleBtn) {
     const now = performance.now();
     if (now - lastTickAt < 40) return;
     lastTickAt = now;
-    blip(2100, 0.03, 0.12, 'square');
-  }
-
-  // headline lock-in: a rounder, two-layer detent
-  function tock() {
-    blip(760, 0.07, 0.3, 'triangle');
-    blip(2500, 0.035, 0.12, 'square');
+    click(0.4);
   }
 
   function renderBtn() {
@@ -64,11 +82,11 @@ export function initAudio(toggleBtn) {
   toggleBtn.addEventListener('click', () => {
     enabled = !enabled;
     localStorage.setItem('aem-sound', enabled ? 'on' : 'off');
-    // confirmation detent so the visitor immediately hears that sound works
-    if (enabled) Promise.resolve(ensureCtx()).then(() => tock());
+    // confirmation click so the visitor immediately hears that sound works
+    if (enabled) Promise.resolve(ensureCtx()).then(() => click(0.5));
     renderBtn();
   });
   renderBtn();
 
-  return { tick, tock };
+  return { tick };
 }

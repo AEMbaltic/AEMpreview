@@ -225,14 +225,11 @@ function buildDwellRemap(scene) {
 }
 
 const remaps = scenes.map(buildDwellRemap);
-const dwellRanges = scenes.map(sceneDwells);
 
-// Scroll tick audio: a soft detent per scroll notch, a deeper tock when a
-// headline dwell locks in (like flicking a clock wheel).
+// Scroll tick audio: a soft mechanical detent per scroll notch.
 const audio = initAudio(document.getElementById('sound-toggle'));
 const TICK_STEP = 140; // px of scroll per tick
 let lastTickBucket = Math.floor(window.scrollY / TICK_STEP);
-let wasInDwell = false;
 
 function renderStage() {
   const y = window.scrollY;
@@ -252,9 +249,6 @@ function renderStage() {
     lastTickBucket = bucket;
     audio.tick();
   }
-  const inDwell = dwellRanges[idx].some(([a, b]) => progress >= a && progress <= b);
-  if (inDwell && !wasInDwell) audio.tock();
-  wasInDwell = inDwell;
 }
 
 window.addEventListener('scroll', renderStage, { passive: true });
