@@ -17,7 +17,7 @@ export function initAudio(toggleBtn) {
       if (!AC) return;
       ctx = new AC();
       master = ctx.createGain();
-      master.gain.value = 0.9;
+      master.gain.value = 1.5;
       master.connect(ctx.destination);
     }
     ctx.addEventListener('statechange', markLiveIfRunning);
@@ -84,14 +84,14 @@ export function initAudio(toggleBtn) {
     const now = performance.now();
     if (now - lastTickAt < 40) return;
     lastTickAt = now;
-    click(0.06);
+    click(0.16);
   }
 
   // --- ambient scroll music -------------------------------------------
   // A warm detuned chord pad (Am9) through a slowly-breathing lowpass.
   // Silent at rest; fades in while the page is scrolling, fades out when
   // scrolling stops. Fully synthesized — no audio files.
-  const MUSIC_LEVEL = 0.35;
+  const MUSIC_LEVEL = 0.8;
   let music = null;
   let musicTimer = null;
 
