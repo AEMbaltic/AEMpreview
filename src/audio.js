@@ -17,13 +17,14 @@ export function initAudio(toggleBtn) {
       if (!AC) return;
       ctx = new AC();
       master = ctx.createGain();
-      master.gain.value = 0.5;
+      master.gain.value = 0.9;
       master.connect(ctx.destination);
     }
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    if (ctx.state === 'suspended') return ctx.resume().catch(() => {});
+    return Promise.resolve();
   }
 
-  for (const ev of ['pointerdown', 'keydown', 'touchstart', 'wheel']) {
+  for (const ev of ['pointerdown', 'touchend', 'click', 'keydown', 'wheel']) {
     window.addEventListener(ev, ensureCtx, { passive: true });
   }
 
@@ -42,18 +43,18 @@ export function initAudio(toggleBtn) {
     osc.stop(t + dur + 0.02);
   }
 
-  // quiet per-notch tick, rate-limited so fast flicks don't machine-gun
+  // per-notch tick, rate-limited so fast flicks don't machine-gun
   function tick() {
     const now = performance.now();
     if (now - lastTickAt < 40) return;
     lastTickAt = now;
-    blip(2100, 0.025, 0.045, 'square');
+    blip(2100, 0.03, 0.12, 'square');
   }
 
   // headline lock-in: a rounder, two-layer detent
   function tock() {
-    blip(760, 0.06, 0.13, 'triangle');
-    blip(2500, 0.03, 0.05, 'square');
+    blip(760, 0.07, 0.3, 'triangle');
+    blip(2500, 0.035, 0.12, 'square');
   }
 
   function renderBtn() {
@@ -63,7 +64,8 @@ export function initAudio(toggleBtn) {
   toggleBtn.addEventListener('click', () => {
     enabled = !enabled;
     localStorage.setItem('aem-sound', enabled ? 'on' : 'off');
-    if (enabled) ensureCtx();
+    // confirmation detent so the visitor immediately hears that sound works
+    if (enabled) Promise.resolve(ensureCtx()).then(() => tock());
     renderBtn();
   });
   renderBtn();
